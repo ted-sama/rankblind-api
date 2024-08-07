@@ -5,7 +5,7 @@ export const themes = pgTable("theme", {
     id: serial("id").primaryKey(),
     name: text("name").notNull(),
     maxRanking: integer("max_ranking").notNull(),
-})
+});
 
 export const themesRelations = relations(themes, ({ many }) => ({
     themeItems: many(themeItems)
