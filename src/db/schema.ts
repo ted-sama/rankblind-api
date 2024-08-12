@@ -1,9 +1,11 @@
 import { integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
+import { desc, relations } from 'drizzle-orm';
 
 export const themes = pgTable("theme", {
     id: serial("id").primaryKey(),
     name: text("name").notNull(),
+    image: text("image").notNull(),
+    description: text("description"),
     maxRanking: integer("max_ranking").notNull(),
 });
 

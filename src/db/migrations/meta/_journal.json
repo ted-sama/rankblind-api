@@ -8,6 +8,20 @@
       "when": 1722115944292,
       "tag": "0000_modern_moon_knight",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1723230124783,
+      "tag": "0001_same_zarda",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1723231946156,
+      "tag": "0002_graceful_wendigo",
+      "breakpoints": true
     }
   ]
 }

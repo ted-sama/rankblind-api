@@ -1,0 +1,1 @@
+ALTER TABLE "theme" ALTER COLUMN "image" SET NOT NULL;

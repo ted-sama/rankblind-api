@@ -20,6 +20,12 @@ app.get("/", (req, res) => {
 
 app.get("/api/themes", async (req: express.Request, res: express.Response) => {
   const results = await db.query.themes.findMany();
+
+  // for image property, add the full path
+  results.forEach((theme: any) => {
+    theme.image = `http://localhost:80/image/${theme.image}`;
+  });
+
   res.json(results);
 });
 
@@ -33,12 +39,14 @@ app.get(
       },
     });
     // for image property, add the full path
+    results!.image = `http://localhost:80/image/${results!.image}`;
+
     results!.themeItems.forEach((item: any) => {
-      item.image = `http://localhost/image/${item.image}`;
+      item.image = `http://localhost:80/image/${item.image}`;
     });
 
     res.json(results);
-  },
+  }
 );
 
 app.put(
@@ -46,6 +54,7 @@ app.put(
   async (req: express.Request, res: express.Response) => {
     const id: number = parseInt(req.params.id);
     const name: string = req.body.name;
+    const description: string = req.body.description;
     var maxRanking: number = parseInt(req.body.max_ranking);
 
     // Si maxRanking dépasse le nombre d'items et ne dépasse pas 10, on le met à la valeur d'items
@@ -61,12 +70,24 @@ app.put(
 
     const results = await db
       .update(themes)
-      .set({ name: name, maxRanking: maxRanking })
+      .set({ name: name, description: description, maxRanking: maxRanking })
       .where(eq(themes.id, id));
 
     res.json(results);
-  },
+  }
 );
+
+app.put("/api/themes/:id/images", upload.single("image"), async (req, res) => {
+  const id: number = parseInt(req.params.id);
+  const image: string = req.file!.filename;
+
+  const results = await db
+    .update(themes)
+    .set({ image: image })
+    .where(eq(themes.id, id));
+
+  res.json(results);
+});
 
 app.post(
   "/api/theme-items",
@@ -90,7 +111,7 @@ app.post(
       image: image,
     });
     res.json(results);
-  },
+  }
 );
 
 app.put(
@@ -115,7 +136,7 @@ app.put(
       .where(eq(themeItems.id, id));
 
     res.json(results);
-  },
+  }
 );
 
 app.delete(
@@ -124,7 +145,7 @@ app.delete(
     const id: number = parseInt(req.params.id);
     const results = await db.delete(themeItems).where(eq(themeItems.id, id));
     res.json(results);
-  },
+  }
 );
 
 app.listen(80, () => {
