@@ -29,6 +29,22 @@ app.get("/api/themes", async (req: express.Request, res: express.Response) => {
   res.json(results);
 });
 
+app.post("/api/themes", upload.single("image"), async (req, res) => {
+  const name: string = req.body.name;
+  const description: string = req.body.description;
+  const maxRanking: number = parseInt(req.body.max_ranking);
+  const image: string = req.file!.filename;
+
+  const results = await db.insert(themes).values({
+    name: name,
+    description: description,
+    maxRanking: maxRanking,
+    image: image,
+  }).returning();
+
+  res.json(results);
+});
+
 app.get(
   "/api/themes/:id",
   async (req: express.Request, res: express.Response) => {
