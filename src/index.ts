@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import multer from "multer";
 import { upload } from "./middleware/multer-config";
 
 // get data from database with drizzle
@@ -109,7 +108,7 @@ app.post(
   "/api/theme-items",
   upload.single("image"),
   async (req: express.Request, res: express.Response) => {
-    const themeId: number = parseInt(req.body.themeId);
+    const themeId: number = parseInt(req.body.theme_id);
     const name: string = req.body.name;
 
     if (!req.file) {
