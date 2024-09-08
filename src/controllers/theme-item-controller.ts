@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 
+// Import fs to delete images
+import fs from "fs";
+
 // Get data from database with drizzle
 import { db } from "db/db";
 import { themes, themeItems } from "db/schema";
@@ -61,6 +64,21 @@ export const updateThemeItem = async (req: Request, res: Response) => {
 // Delete a theme item from the database
 export const deleteThemeItem = async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id);
-    const results = await db.delete(themeItems).where(eq(themeItems.id, id));
-    res.json(results);
+
+    // Delete the image from the public folder
+    const themeItem = await db.query.themeItems.findFirst({
+        where: eq(themeItems.id, id),
+    });
+
+    if (!themeItem) {
+        return res.status(404).json({ message: "Theme item not found" });
+    }
+
+    if (themeItem.image) {
+        fs.unlinkSync(`public/${themeItem.image}`);
+    }
+
+    const deleteResult = await db.delete(themeItems).where(eq(themeItems.id, id));
+
+    res.json(deleteResult);
 };
